@@ -38,7 +38,7 @@ client.on("message", function(message) {
                         `Leaderboard des cryptos 🤑`
                     )
                     .setThumbnail('https://www.lesaffaires.com/uploads/images/normal/f9d2c4729d0beec32aff0867d06ccd81.jpg')
-                    .addFields({ name: `1er. ${response[0].id}`, value: `2eme. ${response[0].market_cap}$` }, { name: `3eme. ${response[1].id}`, value: `${response[1].market_cap}$` }, { name: `4eme. ${response[2].id}`, value: `${response[2].market_cap}$` }, { name: `5eme. ${response[3].id}`, value: `${response[3].market_cap}$` }, { name: `${response[4].id}`, value: `${response[4].market_cap}$` })
+                    .addFields({ name: `1er. ${response[0].id}`, value: ` ${response[0].market_cap}$` }, { name: `2eme. ${response[1].id}`, value: `${response[1].market_cap}$` }, { name: `3eme. ${response[2].id}`, value: `${response[2].market_cap}$` }, { name: `4eme. ${response[3].id}`, value: `${response[3].market_cap}$` }, { name: `5eme. ${response[4].id}`, value: `${response[4].market_cap}$` })
                     .setFooter(`tapez '$?' pour les commandes`)
                     .setColor(0x118C4F)
                 message.channel.send(embed);
