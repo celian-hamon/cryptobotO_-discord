@@ -1,0 +1,16 @@
+{
+  "name": "cryptoboto_",
+  "version": "0.0.1",
+  "description": "Discord bot linked to crypto",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Cece le bg",
+  "license": "ISC",
+  "dependencies": {
+    "coingecko-api": "^1.0.10",
+    "discord.js": "^12.5.3",
+    "superagent": "^6.1.0"
+  }
+}
