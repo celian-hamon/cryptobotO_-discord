@@ -75,9 +75,12 @@ client.on("message", function(message) {
                 // .query({})
                 .end((err, res) => {
                     if (err) {
+                        message.reply('api bug');
                         return console.log(err);
+
                     }
-                    message.reply(res.body.gecko_says);
+                    let timeTaken = Date.now() - message.createdTimestamp;
+                    message.reply("l'api dit : '" + res.body.gecko_says + `' et ce message a une latence de ${timeTaken}ms`);
                     console.log(`commande $ping api par ${author}`);
                 });
         }
@@ -85,7 +88,7 @@ client.on("message", function(message) {
         //commande ping pour le bot
         if (args == "bot" || args == "") {
             let timeTaken = Date.now() - message.createdTimestamp;
-            message.reply(`Pong! This message had a latency of ${timeTaken}ms.`);
+            message.reply(`Pong! Ce message a une latence de ${timeTaken}ms.`);
             console.log(`commande $ping bot par ${author}`);
         }
     }
@@ -142,5 +145,5 @@ client.on("message", function(message) {
     //commande qui renvois une list des coins 
     if (command === "list") {
         message.reply('vas chercher toi même https://api.coingecko.com/api/v3/coins/list')
-    }
+    };
 });
