@@ -144,6 +144,7 @@ client.on("message", function(message) {
 
     //commande qui renvois une list des coins 
     if (command === "list") {
+        //TODO use market and the "page" system
         message.reply('vas chercher toi même https://api.coingecko.com/api/v3/coins/list')
     };
 });
