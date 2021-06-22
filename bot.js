@@ -176,7 +176,7 @@ client.on("message", function(message) {
                         name: `5- ${response[4].id}`,
                         value: `${response[4].current_price}$`,
                     })
-                    .setFooter(`tapez '$?' pour les commandes`)
+                    .setFooter(`Page ${args[1]} sur ${Math.floor(8074 / 5)} - tapez '$?' pour les commandes`)
                     .setColor(0x118c4f);
                 message.channel.send(embed);
                 console.log(`commande $list par ${author}`);
