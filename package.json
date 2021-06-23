@@ -9,7 +9,13 @@
     "author": "Cece le bg",
     "license": "ISC",
     "dependencies": {
+        "@discordjs/opus": "^0.5.3",
+        "@google-cloud/text-to-speech": "^3.2.2",
         "discord.js": "^12.5.3",
-        "superagent": "^6.1.0"
+        "ffmpeg-static": "^4.4.0",
+        "gtts": "^0.2.1",
+        "node-gtts": "^2.0.2",
+        "superagent": "^6.1.0",
+        "talkify-tts": "^3.8.0"
     }
 }

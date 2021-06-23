@@ -1,9 +1,12 @@
 const Discord = require("discord.js");
 const keys = require("./keys.json");
 const fs = require("fs");
-const client = new Discord.Client();
+const util = require('util');
 const superagent = require("superagent");
+
 const { url } = require("inspector");
+
+const client = new Discord.Client();
 
 client.login(keys.BOT_TOKEN);
 
@@ -14,7 +17,8 @@ client.on("ready", () => {
     client.user.setActivity("à vendre des bigmacs car il a tout perdu");
 });
 
-client.on("message", function(message) {
+
+client.on('message', async message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
     //Différentes parties de la commande
     let commandBody = message.content.slice(prefix.length);
@@ -129,16 +133,26 @@ client.on("message", function(message) {
                 if (err) {
                     return message.reply('not found') //en cas d'erreur renvois "non trouvé"
                 }
-                let response = res.body;
-                let embed = new Discord.MessageEmbed() //cree le message embed 
-                    .setAuthor(response.name)
-                    .setThumbnail(response.image.large)
-                    .addField(`${response.market_data.current_price.usd} **$**`, `[${response.name} site](${response.links.homepage[0]})`)
-                    .setFooter(
-                        `tapez '$?' pour les commandes et '$list' pour la liste des cryptos`
-                    )
-                    .setColor(0x118c4f);
-                message.channel.send(embed);
+                if (args[1] == "tts") {
+                    var gtts = require('node-gtts')('fr');
+                    gtts.save("test.mp3", `le cout actuel d'un token de ${res.body.name} est de ${res.body.market_data.current_price.usd} dollars`, function() {
+                        console.log('save done');
+                    })
+                    read();
+
+                } else {
+                    let response = res.body;
+                    let embed = new Discord.MessageEmbed() //cree le message embed 
+                        .setAuthor(response.name)
+                        .setThumbnail(response.image.large)
+                        .addField(`${response.market_data.current_price.usd} **$**`, `[${response.name} site](${response.links.homepage[0]})`)
+                        .setFooter(
+                            `tapez '$?' pour les commandes et '$list' pour la liste des cryptos`
+                        )
+                        .setColor(0x118c4f);
+                    message.channel.send(embed);
+                }
+
                 console.log(`commande $crypto ${args[0]} par ${author}`);
             });
     }
@@ -182,4 +196,18 @@ client.on("message", function(message) {
                 console.log(`commande $list par ${author}`);
             });
     };
+    async function read() {
+        const connection = await message.member.voice.channel.join();
+        const dispatcher = connection.play("temp.mp3");
+        await resolveAfterSeconds(10);
+        connection.disconnect();
+    }
+
+    function resolveAfterSeconds(seconds) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve('resolved');
+            }, seconds * 1000);
+        });
+    }
 });
