@@ -159,43 +159,55 @@ client.on('message', async message => {
 
     //commande qui renvois une list des coins 
     if (command === "list") {
-        superagent
-            .get(
-                "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=5&page=" + args[1] + "&sparkline=false"
-            )
-            // .query({})
-            .end((err, res) => {
-                if (err) {
-                    return console.log(err);
-                }
-                let response = res.body;
-                let embed = new Discord.MessageEmbed()
-                    .setAuthor(`Liste des cryptos 📜`)
-                    .setThumbnail(
-                        "https://www.lesaffaires.com/uploads/images/normal/f9d2c4729d0beec32aff0867d06ccd81.jpg"
-                    )
-                    .addFields({
-                        name: `1- ${response[0].id}`,
-                        value: ` ${response[0].current_price}$`,
-                    }, {
-                        name: `2- ${response[1].id}`,
-                        value: `${response[1].current_price}$`,
-                    }, {
-                        name: `3- ${response[2].id}`,
-                        value: `${response[2].current_price}$`,
-                    }, {
-                        name: `4- ${response[3].id}`,
-                        value: `${response[3].current_price}$`,
-                    }, {
-                        name: `5- ${response[4].id}`,
-                        value: `${response[4].current_price}$`,
-                    })
-                    .setFooter(`Page ${args[1]} sur ${Math.floor(8074 / 5)} - tapez '$?' pour les commandes`)
-                    .setColor(0x118c4f);
-                message.channel.send(embed);
-                console.log(`commande $list par ${author}`);
-            });
+        if (args[1] <= 1614) {
+            superagent
+                .get(
+                    "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=5&page=" + args[1] + "&sparkline=false"
+                )
+                // .query({})
+                .end((err, res) => {
+                    if (err) {
+                        return console.log(err);
+                    }
+                    let response = res.body;
+                    let embed = new Discord.MessageEmbed()
+                        .setAuthor(`Liste des cryptos 📜`)
+                        .setThumbnail(
+                            "https://www.lesaffaires.com/uploads/images/normal/f9d2c4729d0beec32aff0867d06ccd81.jpg"
+                        )
+                        .addFields({
+                            name: `1- ${response[0].id}`,
+                            value: ` ${response[0].current_price}$`,
+                        }, {
+                            name: `2- ${response[1].id}`,
+                            value: `${response[1].current_price}$`,
+                        }, {
+                            name: `3- ${response[2].id}`,
+                            value: `${response[2].current_price}$`,
+                        }, {
+                            name: `4- ${response[3].id}`,
+                            value: `${response[3].current_price}$`,
+                        }, {
+                            name: `5- ${response[4].id}`,
+                            value: `${response[4].current_price}$`,
+                        })
+                        .setFooter(`Page ${args[1]} sur ${Math.floor(8074 / 5)} - tapez '$?' pour les commandes`)
+                        .setColor(0x118c4f);
+                    message.channel.send(embed);
+                    console.log(`commande $list par ${author}`);
+                });
+        } else { message.reply("page inexistante page maximale : 1614") }
     };
+    if (command === "bot") {
+        let embed = new Discord.MessageEmbed()
+            .setAuthor(`infos sur le bot`)
+    };
+
+
+
+
+
+
     async function read() {
         const connection = await message.member.voice.channel.join();
         const dispatcher = connection.play("temp.mp3");
