@@ -10,7 +10,6 @@
     "license": "ISC",
     "dependencies": {
         "@discordjs/opus": "^0.5.3",
-        "@google-cloud/text-to-speech": "^3.2.2",
         "discord.js": "^12.5.3",
         "ffmpeg-static": "^4.4.0",
         "gtts": "^0.2.1",
