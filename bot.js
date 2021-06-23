@@ -111,7 +111,7 @@ client.on('message', async message => {
                 value: "Renvoi un leaderboard des cyptomonnaies en fonction de leurs market cap",
             }, {
                 name: "$crypto",
-                value: "Renvoi la valeur d'un token donné en argument",
+                value: "Renvoi la valeur d'un token donné en argument - Fonctionne aussi en tts en ajoutant tts a la fin de la commande",
             }, {
                 name: "$list",
                 value: "Renvoi une liste de crypto",
@@ -135,7 +135,7 @@ client.on('message', async message => {
                 }
                 if (args[1] == "tts") {
                     var gtts = require('node-gtts')('fr');
-                    gtts.save("test.mp3", `le cout actuel d'un token de ${res.body.name} est de ${res.body.market_data.current_price.usd} dollars`, function() {
+                    gtts.save("temp.mp3", `la valeur actuel d'un token de ${res.body.name} est de ${res.body.market_data.current_price.usd} dollars`, function() {
                         console.log('save done');
                     })
                     read();
