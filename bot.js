@@ -212,7 +212,6 @@ client.on('message', async message => {
 
 
 
-    //TODO longueur dun mp3
     async function read() {
         const connection = await message.member.voice.channel.join();
         const dispatcher = connection.play("temp.mp3");
