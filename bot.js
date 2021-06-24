@@ -135,9 +135,7 @@ client.on('message', async message => {
                 }
                 if (args[1] == "tts") {
                     var gtts = require('node-gtts')('fr');
-                    gtts.save("temp.mp3", `la valeur actuel d'un token de ${res.body.name} est de ${res.body.market_data.current_price.usd} dollars`, function() {
-                        console.log('save done');
-                    })
+                    gtts.save("temp.mp3", `la valeur actuel d'un token de ${res.body.name} est de ${res.body.market_data.current_price.usd} dollars`, function() {})
                     read();
 
                 } else {
@@ -218,8 +216,15 @@ client.on('message', async message => {
     async function read() {
         const connection = await message.member.voice.channel.join();
         const dispatcher = connection.play("temp.mp3");
-        await resolveAfterSeconds(10);
+        await resolveAfterSeconds(getDuration());
         connection.disconnect();
+    }
+
+    function getDuration() {
+        const getMP3Duration = require("get-mp3-duration");
+        const buffer = fs.readFileSync('temp.mp3')
+        const duration = getMP3Duration(buffer)
+        return duration
     }
 
     function end() {
@@ -227,11 +232,11 @@ client.on('message', async message => {
         message.delete();
     }
 
-    function resolveAfterSeconds(seconds) {
+    function resolveAfterSeconds(mSeconds) {
         return new Promise(resolve => {
             setTimeout(() => {
                 resolve('resolved');
-            }, seconds * 1000);
+            }, mSeconds);
         });
     }
 });

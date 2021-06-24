@@ -12,6 +12,7 @@
         "@discordjs/opus": "^0.5.3",
         "discord.js": "^12.5.3",
         "ffmpeg-static": "^4.4.0",
+        "get-mp3-duration": "^1.0.0",
         "gtts": "^0.2.1",
         "node-gtts": "^2.0.2",
         "superagent": "^6.1.0",
