@@ -67,7 +67,7 @@ client.on('message', async message => {
                     .setFooter(`tapez '$?' pour les commandes`)
                     .setColor(0x118c4f);
                 message.channel.send(embed);
-                console.log(`commande $lead par ${author}`);
+                end();
             });
     }
 
@@ -86,7 +86,7 @@ client.on('message', async message => {
                     }
                     let timeTaken = Date.now() - message.createdTimestamp;
                     message.reply("l'api dit : '" + res.body.gecko_says + `' et ce message a une latence de ${timeTaken}ms`);
-                    console.log(`commande $ping api par ${author}`);
+                    end();
                 });
         }
 
@@ -94,7 +94,7 @@ client.on('message', async message => {
         if (args == "bot" || args == "") {
             let timeTaken = Date.now() - message.createdTimestamp;
             message.reply(`Pong! Ce message a une latence de ${timeTaken}ms.`);
-            console.log(`commande $ping bot par ${author}`);
+            end();
         }
     }
 
@@ -120,7 +120,7 @@ client.on('message', async message => {
             .setColor(0x118c4f);
 
         message.channel.send(embed);
-        console.log(`commande $? par ${author}`);
+        end();
     }
 
     //commande qui affiche la valeur d'un token d'une crypto
@@ -153,7 +153,7 @@ client.on('message', async message => {
                     message.channel.send(embed);
                 }
 
-                console.log(`commande $crypto ${args[0]} par ${author}`);
+                end();
             });
     }
 
@@ -176,43 +176,55 @@ client.on('message', async message => {
                             "https://www.lesaffaires.com/uploads/images/normal/f9d2c4729d0beec32aff0867d06ccd81.jpg"
                         )
                         .addFields({
-                            name: `1- ${response[0].id}`,
+                            name: `${(5*args[1])-4}- ${response[0].id}`,
                             value: ` ${response[0].current_price}$`,
                         }, {
-                            name: `2- ${response[1].id}`,
+                            name: `${(5*args[1])-3}- ${response[1].id}`,
                             value: `${response[1].current_price}$`,
                         }, {
-                            name: `3- ${response[2].id}`,
+                            name: `${(5*args[1])-2}- ${response[2].id}`,
                             value: `${response[2].current_price}$`,
                         }, {
-                            name: `4- ${response[3].id}`,
+                            name: `${(5*args[1])-1}- ${response[3].id}`,
                             value: `${response[3].current_price}$`,
                         }, {
-                            name: `5- ${response[4].id}`,
+                            name: `${(5*args[1])}- ${response[4].id}`,
                             value: `${response[4].current_price}$`,
                         })
                         .setFooter(`Page ${args[1]} sur ${Math.floor(8074 / 5)} - tapez '$?' pour les commandes`)
                         .setColor(0x118c4f);
                     message.channel.send(embed);
-                    console.log(`commande $list par ${author}`);
                 });
         } else { message.reply("page inexistante page maximale : 1614") }
+        end();
     };
+
+    //renvois des infos sur le bot
     if (command === "bot") {
         let embed = new Discord.MessageEmbed()
             .setAuthor(`infos sur le bot`)
+
+
+
+        message.channel.send(embed);
+        end();
     };
 
 
 
 
 
-
+    //TODO longueur dun mp3
     async function read() {
         const connection = await message.member.voice.channel.join();
         const dispatcher = connection.play("temp.mp3");
         await resolveAfterSeconds(10);
         connection.disconnect();
+    }
+
+    function end() {
+        console.log(`Commande : ${command} \nArgs : ${args}\nAuteur : ${author}\n`);
+        message.delete();
     }
 
     function resolveAfterSeconds(seconds) {
