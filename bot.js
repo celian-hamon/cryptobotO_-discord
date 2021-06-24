@@ -14,7 +14,7 @@ const prefix = "$";
 
 client.on("ready", () => {
     console.log("CryptobotO_ : I am ready!");
-    client.user.setActivity("à vendre des bigmacs car il a tout perdu");
+    client.user.setActivity("les autres vendre des bigmac car il est riche", { type: "WATCHING" });
 });
 
 
@@ -111,10 +111,13 @@ client.on('message', async message => {
                 value: "Renvoi un leaderboard des cyptomonnaies en fonction de leurs market cap",
             }, {
                 name: "$crypto",
-                value: "Renvoi la valeur d'un token donné en argument - Fonctionne aussi en tts en ajoutant tts a la fin de la commande",
+                value: "Renvoi la valeur d'un token donné en argument - options : tts et tts + bio",
             }, {
                 name: "$list",
                 value: "Renvoi une liste de crypto",
+            }, {
+                name: "bot",
+                value: "renvois des infos sur le bot"
             })
             .setFooter(`tapez '$?' pour les commandes`)
             .setColor(0x118c4f);
@@ -134,9 +137,16 @@ client.on('message', async message => {
                     return message.reply('not found') //en cas d'erreur renvois "non trouvé"
                 }
                 if (args[1] == "tts") {
-                    var gtts = require('node-gtts')('fr');
-                    gtts.save("temp.mp3", `la valeur actuel d'un token de ${res.body.name} est de ${res.body.market_data.current_price.usd} dollars`, function() {})
-                    read();
+                    if (args[2] == "bio") {
+                        var gtts = require('node-gtts')('en');
+                        gtts.save("temp.mp3", `${res.body.description.en}`, function() {})
+                        read();
+                    } else {
+                        var gtts = require('node-gtts')('fr');
+                        gtts.save("temp.mp3", `la valeur actuel d'un token de ${res.body.name} est de ${res.body.market_data.current_price.usd} dollars`, function() {})
+                        read();
+                    }
+
 
                 } else {
                     let response = res.body;
@@ -200,8 +210,10 @@ client.on('message', async message => {
     //renvois des infos sur le bot
     if (command === "bot") {
         let embed = new Discord.MessageEmbed()
-            .setAuthor(`infos sur le bot`)
-
+            .setAuthor(`v ${keys.version}`)
+            .setThumbnail(`https://i.redd.it/0wmmlexz0a771.png`)
+            .setTitle("bot développe avec amour par Cessou")
+            .setDescription(`repo github : [ici](https://github.com/skelletondude/cryptobotO_-discord)`)
 
 
         message.channel.send(embed);
