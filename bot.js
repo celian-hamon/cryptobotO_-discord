@@ -1,26 +1,32 @@
+//importe les modules
 const Discord = require("discord.js");
 const keys = require("./keys.json");
 const fs = require("fs");
 const util = require('util');
 const superagent = require("superagent");
-
 const { url } = require("inspector");
 
+//crée un client discord
 const client = new Discord.Client();
 
+//se connecte a discord avec le token du bot
 client.login(keys.BOT_TOKEN);
 
+//établi le préfixe
 const prefix = "$";
 
+//log un message une fois pret et met un status
 client.on("ready", () => {
     console.log("CryptobotO_ : I am ready!");
     client.user.setActivity("les autres vendre des bigmac car il est riche", { type: "WATCHING" });
 });
 
-
+//traitement lors de la receptions d'un message
 client.on('message', async message => {
+    //Exclus les messages ne commencant pas par le préfix ou provenant d'un bot 
     if (!message.content.startsWith(prefix) || message.author.bot) return;
-    //Différentes parties de la commande
+
+    //split le messages en differentes parties afin de le traiter
     let commandBody = message.content.slice(prefix.length);
     let args = commandBody.split(" ");
     let command = args.shift().toLowerCase();
@@ -33,6 +39,7 @@ client.on('message', async message => {
 
     //commande qui renvoi le leaderboard de la crypto calcule a partir du market cap de chaque crypto
     if (command === "lead") {
+        //requete a l'api 
         superagent
             .get(
                 "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=5&page=1&sparkline=false"
@@ -43,7 +50,7 @@ client.on('message', async message => {
                     return console.log(err);
                 }
                 let response = res.body;
-                let embed = new Discord.MessageEmbed()
+                let embed = new Discord.MessageEmbed() //cree un message embed 
                     .setAuthor(`Leaderboard des cryptos 🤑`)
                     .setThumbnail(
                         "https://www.lesaffaires.com/uploads/images/normal/f9d2c4729d0beec32aff0867d06ccd81.jpg"
@@ -66,7 +73,7 @@ client.on('message', async message => {
                     })
                     .setFooter(`tapez '$?' pour les commandes`)
                     .setColor(0x118c4f);
-                message.channel.send(embed);
+                message.channel.send(embed); //envois le message
                 end();
             });
     }
@@ -75,6 +82,7 @@ client.on('message', async message => {
     if (command === "ping") {
         //commande ping pour l'api
         if (args == "api") {
+            //requete a l'api concernant son status
             superagent
                 .get("https://api.coingecko.com/api/v3/ping")
                 // .query({})
@@ -84,8 +92,8 @@ client.on('message', async message => {
                         return console.log(err);
 
                     }
-                    let timeTaken = Date.now() - message.createdTimestamp;
-                    message.reply("l'api dit : '" + res.body.gecko_says + `' et ce message a une latence de ${timeTaken}ms`);
+                    let timeTaken = Date.now() - message.createdTimestamp; //calcule le temps pris pour repondre au message
+                    message.reply("l'api dit : '" + res.body.gecko_says + `' et ce message a une latence de ${timeTaken}ms`); //repond
                     end();
                 });
         }
@@ -105,18 +113,18 @@ client.on('message', async message => {
             .setThumbnail("https://img.icons8.com/nolan/50/question-mark.png")
             .addFields({
                 name: "$ping",
-                value: "Renvois le status de l'api ou du bot en fonction de l'argument",
+                value: "Renvois le status de l'api ou du bot en fonction de l'argument\n *Exemple : $ping bot*",
             }, {
                 name: "$lead",
-                value: "Renvoi un leaderboard des cyptomonnaies en fonction de leurs market cap",
+                value: "Renvoi un leaderboard des cyptomonnaies en fonction de leurs market cap\n *Exemple : $lead*",
             }, {
                 name: "$crypto",
-                value: "Renvoi la valeur d'un token donné en argument - options : tts et tts + bio",
+                value: "Renvoi la valeur d'un token donné en argument - options : tts et tts + bio\n *Exemple : $crypto bitcoin*",
             }, {
                 name: "$list",
-                value: "Renvoi une liste de crypto",
+                value: "Renvoi une liste de crypto\n *Exemple : $list page 1*",
             }, {
-                name: "bot",
+                name: "$bot",
                 value: "renvois des infos sur le bot"
             })
             .setFooter(`tapez '$?' pour les commandes`)
@@ -146,14 +154,35 @@ client.on('message', async message => {
                         gtts.save("temp.mp3", `la valeur actuel d'un token de ${res.body.name} est de ${res.body.market_data.current_price.usd} dollars`, function() {})
                         read();
                     }
-
-
+                } else if (args[1] == "evol") {
+                    let response = res.body;
+                    let embed = new Discord.MessageEmbed() //cree le message embed 
+                        .setAuthor(response.name)
+                        .setThumbnail(response.image.large)
+                        .addField({ name: ``, value: "" })
+                        .setFooter(
+                            `tapez '$?' pour les commandes et '$list' pour la liste des cryptos`
+                        )
+                        .setColor(0x118c4f);
+                    message.channel.send(embed);
                 } else {
                     let response = res.body;
                     let embed = new Discord.MessageEmbed() //cree le message embed 
                         .setAuthor(response.name)
                         .setThumbnail(response.image.large)
-                        .addField(`${response.market_data.current_price.usd} **$**`, `[${response.name} site](${response.links.homepage[0]})`)
+                        .addFields({
+                            name: "**Current price :**",
+                            value: `${response.market_data.current_price.usd} **$**`
+                        }, {
+                            name: "**Site :**",
+                            value: `[${response.name} site](${response.links.homepage[0]})`
+                        }, {
+                            name: "**Platform :**",
+                            value: `${response.asset_platform_id}`
+                        }, {
+                            name: "**Categories :**",
+                            value: `${response.categories}`
+                        })
                         .setFooter(
                             `tapez '$?' pour les commandes et '$list' pour la liste des cryptos`
                         )
@@ -220,10 +249,7 @@ client.on('message', async message => {
         end();
     };
 
-
-
-
-
+    //lis le message tts
     async function read() {
         const connection = await message.member.voice.channel.join();
         const dispatcher = connection.play("temp.mp3");
@@ -231,6 +257,7 @@ client.on('message', async message => {
         connection.disconnect();
     }
 
+    //recupere la durée du message tts
     function getDuration() {
         const getMP3Duration = require("get-mp3-duration");
         const buffer = fs.readFileSync('temp.mp3')
@@ -238,11 +265,13 @@ client.on('message', async message => {
         return duration
     }
 
+    //fonction supprimant le message et logs la commande avec les arguments et l'auteur 
     function end() {
         console.log(`Commande : ${command} \nArgs : ${args}\nAuteur : ${author}\n`);
         message.delete();
     }
 
+    //timer pour la fontion async qui fonctionne avec la durée du message
     function resolveAfterSeconds(mSeconds) {
         return new Promise(resolve => {
             setTimeout(() => {
